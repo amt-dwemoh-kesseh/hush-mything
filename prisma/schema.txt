@@ -1,0 +1,70 @@
+
+/**
+* database entities models
+/
+model Business {
+  id            Int       @id @default(autoincrement())
+  business_name String
+  businesType   String
+  user          User      @relation(name: "businesses", fields: [userId], references: [id])
+  products      Product[]
+  userId        Int
+}
+
+
+
+
+model User {
+  id               Int           @id @default(autoincrement())
+  email            String        @unique
+  password         String
+  first_name       String?
+  last_name        String?
+  business_name    String?
+  activated        Boolean       @default(false)
+  role             String
+  order            Order?        @relation("UserOrder", fields: [id], references: [user_id])
+  businesses       Business[]?   @relation("UserBusiness")
+  created_at       DateTime      @default(now())
+}
+
+
+
+
+
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  name        String
+  category    String
+  description String
+  unit        String
+  quantity    String
+  orders      Order[]   @relation("OrderProduct")
+  business    Business? @relation(fields: [business_id], references: [id], onDelete: Cascade)
+  business_id Int?
+}
+
+model Order {
+  id         Int       @id @default(autoincrement())
+  products   Product[] @relation("OrderProduct")
+  user       User      @relation(fields: [user_id], references: [id])
+  user_id    Int
+  Quantity   Int?
+  created_at DateTime  @default(now())
+}
+
+model Token {
+  id      Int    @id @default(autoincrement())
+  user_id Int?
+  token   String
+}
+
+model User {
+  id         Int        @id @default(autoincrement())
+  email      String     @unique
+  first_name String?
+  last_name  String?
+  businesses Business[] @relation(name: "businesses")
+  orders     Order[]
+}
