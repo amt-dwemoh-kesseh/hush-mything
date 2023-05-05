@@ -23,4 +23,4 @@ customerRouter.post("/api/customer/login", loginValidation, customerLogin);
 
 customerRouter.post('/api/customer/reset', validateEmail, sendResetPasswordMail);
 
-customerRouter.post("/customer/reset", verifyMyPasswordReset);
+customerRouter.put("/customer/reset", verifyMyPasswordReset);
