@@ -107,7 +107,7 @@ passport.use(
           callback(null, user);
         }
       } catch (error) {
-        callback(error);
+        console.log(error);
       }
     }
   )
@@ -125,9 +125,9 @@ passport.deserializeUser(async function (email, callback) {
     if (user) {
       callback(null, user);
     } else {
-      callback(new Error("User not found"));
+      console.log('User not found')
     }
   } catch (error) {
-    callback(error);
+    console.log(error)
   }
 });
