@@ -28,14 +28,13 @@ export const merchantSignIn = async (
         email: email,
       },
     });
-
     if (user) {
-      return res.status(401).json({
-        message: "A merchant with this Email already exists, Log In!",
-      });
-    }
-
-    const merchant = await prisma.user.create({
+         res.status(401).json({
+      message: "A merchant with this Email already exists, Log In!",
+    }); 
+    } else {
+      console.log('user not found')
+      const merchant = await prisma.user.create({
       data: {
         email,
         business_name,
@@ -43,27 +42,28 @@ export const merchantSignIn = async (
         role: roleType.merchant,
         activated,
       },
-    });
-    const NewBusiness = await prisma.business.create({
+      })
+      
+       const NewBusiness = await prisma.business.create({
       data: {
         business_name: merchant.business_name,
-        businesType,
         userId: merchant.id,
+        businesType
       },
-    });
-
-    const merchantToken = await prisma.token.create({
+       });
+      
+      const merchantToken = await prisma.token.create({
       data: {
         userId: merchant.id,
         token: token(merchant.id),
       },
-    });
-
-    sendActivationMail(merchant, token(merchant.id));
-
-    res.status(201).send({
+      });
+      sendActivationMail(merchant, token(merchant.id));
+      res.status(201).send({
       message: `Activate your account with the link sent to ${merchant.email}`,
     });
+      }
+        
   } catch (err) {
     console.error(err);
     res
