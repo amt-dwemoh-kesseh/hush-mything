@@ -81,6 +81,7 @@ passport.use(
       );
 
       try {
+        
         const user = await prisma.user.findUnique({
           where: { email: profile._json.email },
         });

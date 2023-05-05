@@ -45,7 +45,7 @@ export const merchantLogin = async (
     if (compareSuccess) {
       return res
         .status(200)
-        .json({ message: "Success", merchantActivated: { email, token } });
+        .json({ message: "Success", merchantActivated: { email, token:token(merchantExist.id) } });
     } else {
       return res.status(501).json({ message: "Invalid email or password" });
     }

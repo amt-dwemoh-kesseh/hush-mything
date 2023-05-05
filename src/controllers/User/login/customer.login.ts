@@ -45,9 +45,10 @@ export const customerLogin = async (
       customerActivated.password
     );
     if (compareSuccess) {
-      return res
+      
+       res
         .status(200)
-        .json({ message: "Success", customerActivated: { email, token } });
+        .json({ message: "Success", customerActivated: { email, token:token(customerExist.id) } });
     } else {
       return res.status(501).json({ message: "Invalid email or password" });
     }
