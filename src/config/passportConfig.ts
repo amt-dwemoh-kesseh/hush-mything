@@ -107,7 +107,7 @@ passport.use(
           callback(null, user);
         }
       } catch (error) {
-        callback(error);
+        console.log(error);
       }
     }
   )
@@ -117,17 +117,17 @@ passport.serializeUser(function (user, callback) {
   callback(null, (user as any).email);
 });
 
-passport.deserializeUser(async function (email, done) {
+passport.deserializeUser(async function (email, callback) {
   try {
     const user = await prisma.user.findFirst({
       where: { email: email },
     });
     if (user) {
-      done(null, user);
+      callback(null, user);
     } else {
-      done(new Error("User not found"));
+      console.log('User not found')
     }
   } catch (error) {
-    done(error);
+    console.log(error)
   }
 });
