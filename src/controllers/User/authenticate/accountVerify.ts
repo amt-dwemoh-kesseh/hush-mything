@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient()
 
 export const verifymyAccount = async (req: Request, res: Response, next: NextFunction) => {
-    const { id,token } = req.params;
+    const { id,token } = req.body;
     try {
         const user = await prisma.user.findUnique({
             where: {
@@ -24,7 +24,7 @@ export const verifymyAccount = async (req: Request, res: Response, next: NextFun
         if (!userToken) {
           return res.status(401).json({ message: "Invalid link" });
         }
-        return await prisma.user.update({
+        const verifiedUser = await prisma.user.update({
             where: {
                 id:user.id
             },
@@ -32,6 +32,12 @@ export const verifymyAccount = async (req: Request, res: Response, next: NextFun
                 activated:true
             }
         })
+
+        if (verifiedUser) {
+            res.status(200).json({
+            status: "ok",
+            message: "successfully verified"
+        })}
 
     } catch (error) {
         
