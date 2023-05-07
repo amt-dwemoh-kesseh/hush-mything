@@ -1,6 +1,7 @@
 import * as nodemailer from "nodemailer";
 
-const { MAILER_HOST, MAILER_SERVICE, MAILER_PORT, MAILER_USER,MAILER_PASS } = process.env;
+const { MAILER_HOST, MAILER_SERVICE, MAILER_PORT, MAILER_USER, MAILER_PASS } =
+  process.env;
 
 export const Mailer = async (
   user,
@@ -12,7 +13,7 @@ export const Mailer = async (
     host: MAILER_HOST,
     service: MAILER_SERVICE,
     port: Number(MAILER_PORT),
-    secure: false, 
+    secure: false,
     auth: {
       user: MAILER_USER,
       pass: MAILER_PASS,
@@ -1153,6 +1154,6 @@ export const Mailer = async (
 `,
     });
   } catch (error) {
-    throw new Error(error)
+    throw new Error(error);
   }
 };

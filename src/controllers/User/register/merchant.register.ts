@@ -33,7 +33,6 @@ export const merchantSignIn = async (
       message: "A merchant with this Email already exists, Log In!",
     }); 
     } else {
-      console.log('user not found')
       const merchant = await prisma.user.create({
       data: {
         email,
@@ -48,8 +47,7 @@ export const merchantSignIn = async (
       data: {
         business_name: merchant.business_name,
         userId: merchant.id,
-        businesType
-      },
+              },
        });
       
       const merchantToken = await prisma.token.create({

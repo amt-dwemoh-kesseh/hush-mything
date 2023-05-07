@@ -7,7 +7,7 @@ import * as bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
-export const merchantLogin = async (
+export const userLogin = async (
   req: Request<{ merchant: Partial<UserRequestBody> }>,
   res: Response,
   next: NextFunction
@@ -19,37 +19,40 @@ export const merchantLogin = async (
     }
 
     const { email, password } = req.body;
-    
-    
-    const merchantExist = await prisma.user.findUnique({
+
+    const userExist = await prisma.user.findUnique({
       where: {
         email: email,
       },
     });
-    if (!merchantExist) {
+
+    if (!userExist) {
       res
         .status(501)
         .json({ message: "Email not registered,SignUp for an account" });
     }
-
-    const merchantActivated = await prisma.user.findFirst({
+    const userActivated = await prisma.user.findFirst({
       where: {
         email: email,
         activated: true,
       },
     });
-    if (!merchantActivated) {
+    if (!userActivated) {
       return res.status(501).json({ message: "Account not verified!" });
     }
-    const compareSuccess = await bcrypt.compareSync( password,merchantActivated.password);
+    const compareSuccess = await bcrypt.compareSync(
+      password,
+      userActivated.password
+    );
     if (compareSuccess) {
-      return res
+      
+       res
         .status(200)
-        .json({ message: "Success", merchantActivated: { email, token:token(merchantExist.id) } });
+        .json({ message: "Success", userrActivated: { email, token:token(userExist.id),role:userActivated.role } });
     } else {
       return res.status(501).json({ message: "Invalid email or password" });
     }
   } catch (error) {
-    throw new Error('Error Whilst logging in!')
+    throw new Error("Error While logging in");
   }
 };

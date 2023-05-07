@@ -1,14 +1,12 @@
 import express, { Application, Request, Response } from "express";
 import dotenv from "dotenv";
-import { customerRouter } from "./routes/User/customer.route";
-import { merchantRouter } from "./routes/User/merchant.route";
 import expressSession from "express-session";
 import passport from "passport";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
-import { facebookRouter } from "./routes/User/stategies/facebook.route";
-import "./config/passportConfig";
-import { googleRouter } from "./routes/User/stategies/google.route";
+import "./config/customerPassportConfig";
+import "./config/merchantPassportConfig"
+import { router } from "./routes/routesHandler/routes";
 
 dotenv.config();
 
@@ -30,10 +28,7 @@ app.use(passport.session());
 app.use(cors({}));
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/", customerRouter);
-app.use("/", merchantRouter);
-app.use("/", facebookRouter);
-app.use("/", googleRouter);
+app.use(router);
 
 const PORT = process.env.PORT;
 
