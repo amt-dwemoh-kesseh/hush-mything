@@ -46,11 +46,12 @@ export const userLogin = async (
     );
     if (compareSuccess) {
       
-       res
+      res
         .status(200)
         .json({ message: "Success", userActivated: { email, token: token(userExist.id), role: userActivated.role } });
     } else {
-       res.status(401).json({ message: "Invalid email or password" });
+      res.status(401)
+      throw new Error('Invalid email or password')
     }
   } catch (error) {
     throw new Error("Error While logging in");
