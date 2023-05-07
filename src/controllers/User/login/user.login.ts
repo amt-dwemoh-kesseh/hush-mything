@@ -15,7 +15,7 @@ export const userLogin = async (
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(401).json({ errors: errors.array() });
     }
 
     const { email, password } = req.body;
@@ -28,7 +28,7 @@ export const userLogin = async (
 
     if (!userExist) {
       res
-        .status(501)
+        .status(401)
         .json({ message: "Email not registered,SignUp for an account" });
     }
     const userActivated = await prisma.user.findFirst({
@@ -38,7 +38,7 @@ export const userLogin = async (
       },
     });
     if (!userActivated) {
-      return res.status(501).json({ message: "Account not verified!" });
+      return res.status(401).json({ message: "Account not verified!" });
     }
     const compareSuccess = await bcrypt.compareSync(
       password,
@@ -48,9 +48,9 @@ export const userLogin = async (
       
        res
         .status(200)
-        .json({ message: "Success", userActivated: { email, token:token(userExist.id),role:userActivated.role } });
+        .json({ message: "Success", userActivated: { email, token: token(userExist.id), role: userActivated.role } });
     } else {
-      return res.status(501).json({ message: "Invalid email or password" });
+      return res.status(401).json({ message: "Invalid email or password" });
     }
   } catch (error) {
     throw new Error("Error While logging in");
