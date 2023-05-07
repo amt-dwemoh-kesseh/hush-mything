@@ -4,28 +4,28 @@ import passport from "passport";
 export const facebookCustomerRouter = express.Router();
 
 facebookCustomerRouter.get(
-  "/",
+  "/auth/facebook",
   passport.authenticate("facebook", { scope: "email" })
 );
 
 facebookCustomerRouter.get(
-  "/callback",
+  "/facebook/callback",
   passport.authenticate("facebook", {
-    successRedirect: "/verify/mockpage",
-    failureRedirect: "/verify/fail",
+    successRedirect: "/api/verify/mockpage",
+    failureRedirect: "/api/verify/fail",
   })
 );
 
 facebookCustomerRouter.get(
-  "/verify/mockpage",
+  "/api/verify/mockpage",
   (req: Request, res: Response) => {
     res.send("You are finally here");
   }
 );
 
 facebookCustomerRouter.get(
-  "/verify/fail",
+  "/api/verify/fail",
   (req: Request, res: Response) => {
-    res.send("failed to verify");
+    res.send("https://github.com");
   }
 );

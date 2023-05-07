@@ -49,6 +49,7 @@ passport.use(
               activated: true,
             },
           });
+          console.log(newUser)
           if (newUser) {
             passport.serializeUser(newUser, function (err, email) {
               callback(err, newUser);

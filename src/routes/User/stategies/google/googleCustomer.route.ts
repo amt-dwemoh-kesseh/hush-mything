@@ -4,18 +4,18 @@ import passport from "passport";
 export const googleCustomerRouter = express.Router();
 
 googleCustomerRouter.get(
-  "/",
+  "/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
 googleCustomerRouter.get(
-  "/callback",
-  passport.authenticate("google", { failureRedirect: "/verify/failpage" }),
+  "/google/callback",
+  passport.authenticate("google", { failureRedirect: "/failpage" }),
   (req: Request, res: Response) => {
     res.redirect("/frontendpage");
   }
 );
 
-googleCustomerRouter.get("/verify/frontendpage", (req: Request, res: Response) => {
+googleCustomerRouter.get("/frontendpage", (req: Request, res: Response) => {
   res.send("You are now authorized");
 });

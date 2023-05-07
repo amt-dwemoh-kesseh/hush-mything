@@ -18,7 +18,7 @@ export const sendActivationMail = async (user, token) => {
         await Mailer(user, subject, message, heading)
         
     } catch (error) {
-        throw new Error('Error Sending Mail')
+        console.error('Error Sending Mail')
     }
 
 }

@@ -6,7 +6,7 @@ import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 import "./config/customerPassportConfig";
 import "./config/merchantPassportConfig"
-import { router } from "./routes/routesHandler/routes";
+import { approuter } from "./routes/routesHandler/routes";
 
 dotenv.config();
 
@@ -28,7 +28,8 @@ app.use(passport.session());
 app.use(cors({}));
 app.use(express.urlencoded({ extended: true }));
 
-app.use(router);
+app.use('/',approuter)
+
 
 const PORT = process.env.PORT;
 
