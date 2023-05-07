@@ -48,7 +48,7 @@ export const userLogin = async (
       
        res
         .status(200)
-        .json({ message: "Success", userrActivated: { email, token:token(userExist.id),role:userActivated.role } });
+        .json({ message: "Success", userActivated: { email, token:token(userExist.id),role:userActivated.role } });
     } else {
       return res.status(501).json({ message: "Invalid email or password" });
     }
