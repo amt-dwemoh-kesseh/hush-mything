@@ -30,8 +30,8 @@ export const merchantSignIn = async (
     });
     if (user) {
          res.status(401).json({
-      message: "A merchant with this Email already exists, Log In!",
-    }); 
+           message: "Email already has an account, please Login",
+         }); 
     } else {
       const merchant = await prisma.user.create({
       data: {

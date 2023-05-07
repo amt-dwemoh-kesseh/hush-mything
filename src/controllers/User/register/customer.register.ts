@@ -37,7 +37,7 @@ export const customerSignIn = async (
 
     if (user) {
       return res.status(401).json({
-        message: "A User with this Email already exists, Log In!",
+        message: "Email already has an account, please Login",
       });
     }
 

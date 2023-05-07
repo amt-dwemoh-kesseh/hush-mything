@@ -50,7 +50,7 @@ export const userLogin = async (
         .status(200)
         .json({ message: "Success", userActivated: { email, token: token(userExist.id), role: userActivated.role } });
     } else {
-       res.status(401).json({ message: "Invalid email or password" });
+       res.status(401).json({ message: "username or password incorrect" });
     }
   } catch (error) {
     throw new Error("Error While logging in");
