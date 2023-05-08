@@ -16,7 +16,7 @@ export const verifymyAccount = async (
       },
     });
     if (!user) {
-      return res.status(401).json({ message: "Invalid link" });
+      return res.status(401).json({ message: "Invalid link!" });
     }
 
         const userToken = await prisma.token.findFirst({
