@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import passport from "passport";
 
-export const googleCustomerRouter = express.Router();
+const googleCustomerRouter = express.Router();
 
 googleCustomerRouter.get(
   "/auth/google",
@@ -19,3 +19,6 @@ googleCustomerRouter.get(
 googleCustomerRouter.get("/frontendpage", (req: Request, res: Response) => {
   res.send("You are now authorized");
 });
+
+
+export default googleCustomerRouter;

@@ -5,17 +5,20 @@ import { validateEmail } from "../../config/validatorConfig";
 import { sendResetPasswordMail } from "../../controllers/User/resetPassword/customer.passwordReset";
 import { verifyMyPasswordReset } from "../../controllers/User/authenticate/password.reset";
 
-export const merchantRouter = express.Router();
+const merchantRouter = express.Router();
 
 merchantRouter.post(
-  "/api/merchant/signup",
+  "/signup",
   merchantRegistrationValidation,
   merchantSignIn
 );
+
 merchantRouter.post(
-  "/api/merchant/reset",
+  "/reset",
   validateEmail,
   sendResetPasswordMail
 );
 
-merchantRouter.post("/merchant/reset", verifyMyPasswordReset);
+merchantRouter.post("/verify/reset", verifyMyPasswordReset);
+
+export default merchantRouter;

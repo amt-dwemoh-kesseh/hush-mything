@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import passport from "passport";
 
-export const facebookCustomerRouter = express.Router();
+const facebookCustomerRouter = express.Router();
 
 facebookCustomerRouter.get(
   "/auth/facebook",
@@ -29,3 +29,5 @@ facebookCustomerRouter.get(
     res.send("https://github.com");
   }
 );
+
+export default facebookCustomerRouter;

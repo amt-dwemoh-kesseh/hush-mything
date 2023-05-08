@@ -1,27 +1,30 @@
 import express,{Request,Response, response} from "express";
 import { customerSignIn } from "../../controllers/User/register/customer.register";
 import {
-  customerRegistrationValidation,
+  customerRegistrationValidation, loginValidation,
   
 } from "../../middlewares/validators/auth.validator";
 import { verifymyAccount } from "../../controllers/User/authenticate/accountVerify";
 import { validateEmail } from "../../config/validatorConfig";
 import { sendResetPasswordMail } from "../../controllers/User/resetPassword/customer.passwordReset";
 import { verifyMyPasswordReset } from "../../controllers/User/authenticate/password.reset";
+import { userLogin } from "../../controllers/User/login/user.login";
 
 
-export const customerRouter = express.Router();
+const customerRouter = express.Router();
 
 customerRouter.post(
-  "/api/customer/signup",
+  "/register",
   customerRegistrationValidation,
   customerSignIn
 );
-customerRouter.get("/verify/:id/:token",verifymyAccount)
 
+customerRouter.post("/login", loginValidation, userLogin);
 
+customerRouter.put("/verify", verifymyAccount);
 
-customerRouter.post('/reset', validateEmail, sendResetPasswordMail);
+customerRouter.post("/reset", validateEmail, sendResetPasswordMail);
 
 customerRouter.put("/verify/reset", verifyMyPasswordReset);
 
+export default customerRouter;
