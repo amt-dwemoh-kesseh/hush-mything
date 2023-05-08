@@ -39,7 +39,7 @@ export const verifymyAccount = async (
       if (verifiedUser) {
           res
             .status(200)
-            .redirect("https://aj-storefront-frontend.netlify.app/login")
+            .json({success:true,message:'something dey'})
             
       }
   } catch (error) {
