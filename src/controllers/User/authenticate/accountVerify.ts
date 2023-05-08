@@ -43,6 +43,7 @@ export const verifymyAccount = async (
             
       }
   } catch (error) {
-    throw new Error("Error whilst verifying!");
+    // throw new Error("Error whilst verifying!");
+    console.log(error)
   }
 };

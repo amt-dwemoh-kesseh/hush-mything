@@ -61,13 +61,9 @@ export const customerSignIn = async (
 
     sendActivationMail(customer, token(customer.id));
 
-    res.status(201).json({
-      message: `Activate your account with the link sent to ${customer.email}`,
-      customer: {
-        email: customer.email,
-        token: customerToken.token,
-      },
-    });
+    res.status(201).json({success:true,
+      message: `You should receive an email shortly. Activate your account with the link sent to ${customer.email}`,
+        });
     next();
   } catch (err) {
     console.error(err);
