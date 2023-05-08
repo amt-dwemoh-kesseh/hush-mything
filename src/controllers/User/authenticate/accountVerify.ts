@@ -20,14 +20,15 @@ export const verifymyAccount = async (
     }
 
     const userToken = await prisma.token.findFirst({
-      where: {
-        userId: user.id,
-        token: token,
-      },
+        where: {
+          userId: user.id,
+          token:token
+        }
     });
     if (!userToken) {
       return res.status(401).json({ message: "Invalid link" });
     }
+        
     const verifiedUser = await prisma.user.update({
       where: {
         id: user.id,
@@ -42,8 +43,10 @@ export const verifymyAccount = async (
             .json({success:true,message:'something dey'})
             
       }
-  } catch (error) {
-    // throw new Error("Error whilst verifying!");
-    console.log(error)
-  }
-};
+     
+    
+  }catch (error) {
+        
+    throw new Error('Error whilst verifying!')
+}
+}
