@@ -13,7 +13,7 @@ export const sendActivationMail = async (user, token) => {
             },</p> <p style="font-size: 18px; text-align: center">Activate your Storefront Account with the link below...</p>.`;
         
         const subject = `Activate Your Storefront Account`;
-        const message = `${FRONTEND_BASE_URL}/verify/${user.id}/${token}`;
+        const message = `${FRONTEND_BASE_URL}/auth-success/${user.id}/${token}/`;
         await Mailer(user, subject, message, heading)
         
     } catch (error) {
