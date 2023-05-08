@@ -30,7 +30,6 @@ passport.use(
       passReqToCallback: true,
     },
     async function (request, accessToken, refreshToken, profile, callback) {
-      
       const salt = await bcrypt.genSalt(Number(SALT_VALUE));
       const googlehashPassword = bcrypt.hashSync(profile._json.sub, salt);
 
@@ -39,19 +38,25 @@ passport.use(
           where: { email: profile._json.email },
         });
         if (!user) {
-          const newUser = await prisma.user.create({
+          const newMerchant = await prisma.user.create({
             data: {
               email: profile._json.email,
-              first_name: profile._json.family_name,
-              last_name: profile._json.given_name,
-              role: roleType.customer,
+              business_name: profile._json.family_name,
+              role: roleType.merchant,
               password: googlehashPassword,
               activated: true,
             },
           });
-          if (newUser) {
-            passport.serializeUser(newUser, function (err, email) {
-              callback(err, newUser);
+            const newBusiness = await prisma.business.create({
+                data: {
+                    userId: newMerchant.id,
+                    businesType: 'fashion',
+                    business_name:newMerchant.business_name
+                }
+            })
+          if (newMerchant) {
+            passport.serializeUser(newMerchant, function (err, email) {
+              callback(err, newMerchant);
             });
           } else {
             callback(null, user);
@@ -85,20 +90,26 @@ passport.use(
           where: { email: profile._json.email },
         });
         if (!user) {
-          const newUser = await prisma.user.create({
+          const newMerchant = await prisma.user.create({
             data: {
               email: profile._json.email,
-              first_name: profile._json.first_name,
-              last_name: profile._json.last_name,
-              role: roleType.customer,
+              business_name: profile._json.first_name,
+              role: roleType.merchant,
               password: facebookhashPassword,
               activated: true,
             },
           });
+            const newBusiness = await prisma.business.create({
+              data: {
+                userId: newMerchant.id,
+                businesType: "fashion",
+                business_name: newMerchant.business_name,
+              },
+            });
 
-          if (newUser) {
-            passport.serializeUser(newUser, function (err, email) {
-              callback(err, newUser);
+          if (newMerchant) {
+            passport.serializeUser(newMerchant, function (err, email) {
+              callback(err, newMerchant);
             });
           } else {
             callback(null, user);
@@ -125,9 +136,9 @@ passport.deserializeUser(async function (email, callback) {
     if (user) {
       callback(null, user);
     } else {
-      console.log('User not found')
+      console.log("User not found");
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 });

@@ -37,7 +37,7 @@ export const customerSignIn = async (
 
     if (user) {
       return res.status(401).json({
-        message: "A User with this Email already exists, Log In!",
+        message: "Email already has an account, please Login",
       });
     }
 
@@ -61,13 +61,9 @@ export const customerSignIn = async (
 
     sendActivationMail(customer, token(customer.id));
 
-    res.status(201).json({
-      message: `Activate your account with the link sent to ${customer.email}`,
-      customer: {
-        email: customer.email,
-        token: customerToken.token,
-      },
-    });
+    res.status(201).json({success:true,
+      message: `You should receive an email shortly. Activate your account with the link sent to ${customer.email}`,
+        });
     next();
   } catch (err) {
     console.error(err);

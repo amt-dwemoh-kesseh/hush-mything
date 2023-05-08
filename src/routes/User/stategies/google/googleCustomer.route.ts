@@ -1,14 +1,14 @@
 import express, { Request, Response } from "express";
 import passport from "passport";
 
-export const googleRouter = express.Router();
+export const googleCustomerRouter = express.Router();
 
-googleRouter.get(
-  "/google",
+googleCustomerRouter.get(
+  "/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
-googleRouter.get(
+googleCustomerRouter.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/failpage" }),
   (req: Request, res: Response) => {
@@ -16,6 +16,6 @@ googleRouter.get(
   }
 );
 
-googleRouter.get("/frontendpage", (req: Request, res: Response) => {
+googleCustomerRouter.get("/frontendpage", (req: Request, res: Response) => {
   res.send("You are now authorized");
 });
