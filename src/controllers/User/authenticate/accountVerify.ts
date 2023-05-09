@@ -8,26 +8,29 @@ export const verifymyAccount = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { id, token } = req.params;
+
+  const { id, token } = req.body;
   try {
     let isTokenValid: boolean;
+
     await jwt.verify(token, process.env.JWT_SECRET, (err, decode) => {
       if (err) {
         res.status(400).json({
           status: false,
-          message: "token verification failed",
-          stack: process.env.NODE_ENV == "development" ? err.stack : [],
+          message: "token verification failed.Contact the storefront Administrator",
+          
         });
       }
       isTokenValid = true;
     });
+
     const user = await prisma.user.findUnique({
       where: {
         id: id,
       },
     });
     if (!user) {
-      return res.status(401).json({ message: "Invalid link!" });
+      return res.status(401).json({ success:false ,message: "Broken Link. Contact the storefront Administrator!" });
     }
     if (user && isTokenValid) {
       const verifiedUser = await prisma.user.update({
@@ -44,11 +47,11 @@ export const verifymyAccount = async (
           .json({
             success: true,
             verifiedToken: token,
-            message: "Sucessfully verified",
+            message: "Authentication successful",
           });
       }
     }
   } catch (error) {
-    throw new Error("Error whilst verifying!");
+    console.error("Error whilst verifying!");
   }
 };
