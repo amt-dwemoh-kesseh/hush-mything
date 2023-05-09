@@ -8,7 +8,7 @@ export const verifymyAccount = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { id, token } = req.params;
+  const { id, token } = req.body;
   try {
     const user = await prisma.user.findUnique({
       where: {
