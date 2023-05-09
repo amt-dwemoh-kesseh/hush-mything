@@ -12,10 +12,10 @@ googleCustomerRouter.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/failpage" }),
   (req: Request, res: Response) => {
-    res.redirect("/frontendpage");
+    res.redirect("https://aj-storefront-frontend.netlify.app/homepage");
   }
 );
 
-googleCustomerRouter.get("/frontendpage", (req: Request, res: Response) => {
-  res.send("You are now authorized");
+googleCustomerRouter.get("/failpage", (req: Request, res: Response) => {
+  res.send("Failed to authenticate");
 });
