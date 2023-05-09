@@ -1,6 +1,6 @@
 import express, { NextFunction, Response, Request } from "express";
 import { PrismaClient } from "@prisma/client";
-import jwt from "jsonwebtoken";
+
 const prisma = new PrismaClient();
 
 export const verifymyAccount = async (
@@ -8,50 +8,39 @@ export const verifymyAccount = async (
   res: Response,
   next: NextFunction
 ) => {
-
-  const { id, token } = req.body;
+  const { id, token } = req.params;
   try {
-    let isTokenValid: boolean;
-
-    await jwt.verify(token, process.env.JWT_SECRET, (err, decode) => {
-      if (err) {
-        res.status(400).json({
-          status: false,
-          message: "token verification failed.Contact the storefront Administrator",
-          
-        });
-      }
-      isTokenValid = true;
-    });
-
     const user = await prisma.user.findUnique({
       where: {
         id: id,
       },
     });
     if (!user) {
-      return res.status(401).json({ success:false ,message: "Broken Link. Contact the storefront Administrator!" });
+      return res.status(401).json({ message: "Invalid link!" });
     }
-    if (user && isTokenValid) {
-      const verifiedUser = await prisma.user.update({
-        where: {
-          id: user.id,
-        },
-        data: {
-          activated: true,
-        },
-      });
-      if (verifiedUser) {
-        res
-          .status(200)
-          .json({
-            success: true,
-            verifiedToken: token,
-            message: "Authentication successful",
-          });
-      }
+
+    const userToken = await prisma.token.findFirst({
+      where: {
+        userId: user.id,
+        token: token,
+      },
+    });
+    if (!userToken) {
+      return res.status(401).json({ message: "Invalid link" });
+    }
+
+    const verifiedUser = await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        activated: true,
+      },
+    });
+    if (verifiedUser) {
+      res.status(200).json({ success: true, message: "something dey" });
     }
   } catch (error) {
-    console.error("Error whilst verifying!");
+    throw new Error("Error whilst verifying!");
   }
 };
