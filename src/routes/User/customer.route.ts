@@ -1,4 +1,4 @@
-import express, { Request, Response, response } from "express";
+import express, { Request, Response, response } from 'express';
 import { customerSignIn } from "../../controllers/User/register/customer.register";
 import { customerRegistrationValidation } from "../../middlewares/validators/auth.validator";
 import { verifymyAccount } from "../../controllers/User/authenticate/accountVerify";
