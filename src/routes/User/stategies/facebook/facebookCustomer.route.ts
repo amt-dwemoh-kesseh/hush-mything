@@ -11,7 +11,7 @@ facebookCustomerRouter.get(
 facebookCustomerRouter.get(
   "/facebook/callback",
   passport.authenticate("facebook", {
-    successRedirect: "/api/verify/mockpage",
+    successRedirect: "https://aj-storefront-frontend.netlify.app",
     failureRedirect: "/api/verify/fail",
   })
 );
