@@ -22,13 +22,7 @@ app.use(
   })
 );
 
-app.use(
-  cors({
-    origin: "https://aj-storefront-frontend.netlify.app",
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true,
-  })
-);
+app.use(cors({}));
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());
