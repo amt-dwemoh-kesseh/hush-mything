@@ -2,6 +2,7 @@ import passport from "passport";
 import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
 dotenv.config();
+import express,{Request,Response} from 'express'
 import {
   Profile as FacebookProfile,
   Strategy as FacebookStrategy,
@@ -35,6 +36,10 @@ passport.use(
       const googlehashPassword = bcrypt.hashSync(profile._json.sub, salt);
 
       try {
+        const sendUser = (req: Request, res: Response) => {
+          res.json({message:'I am in the passport config now'})
+        }
+        
         const user = await prisma.user.findUnique({
           where: { email: profile._json.email },
         });
@@ -60,6 +65,7 @@ passport.use(
         } else {
           callback(null, user);
         }
+        sendUser
       } catch (error) {
         callback(error);
       }
