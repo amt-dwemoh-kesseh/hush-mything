@@ -4,7 +4,7 @@ import expressSession from "express-session";
 import passport from 'passport'
 import cors from 'cors'
 import "./config/customerPassportConfig";
-import "./config/merchantPassportConfig"
+// import "./config/merchantPassportConfig"
 import { approuter } from "./routes/routesHandler/routes";
 
 dotenv.config();
