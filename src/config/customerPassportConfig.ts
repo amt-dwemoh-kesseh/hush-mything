@@ -2,7 +2,7 @@ import passport from "passport";
 import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
 dotenv.config();
-import express,{Request,Response} from 'express'
+import express, { Request, Response } from "express";
 import {
   Profile as FacebookProfile,
   Strategy as FacebookStrategy,
@@ -31,15 +31,10 @@ passport.use(
       passReqToCallback: true,
     },
     async function (request, accessToken, refreshToken, profile, callback) {
-      
       const salt = await bcrypt.genSalt(Number(SALT_VALUE));
       const googlehashPassword = bcrypt.hashSync(profile._json.sub, salt);
 
       try {
-        const sendUser = (req: Request, res: Response) => {
-          res.json({message:'I am in the passport config now'})
-        }
-        
         const user = await prisma.user.findUnique({
           where: { email: profile._json.email },
         });
@@ -54,7 +49,7 @@ passport.use(
               activated: true,
             },
           });
-          console.log(newUser)
+          console.log(newUser);
           if (newUser) {
             passport.serializeUser(newUser, function (err, email) {
               callback(err, newUser);
@@ -65,7 +60,6 @@ passport.use(
         } else {
           callback(null, user);
         }
-        sendUser
       } catch (error) {
         callback(error);
       }
@@ -88,7 +82,6 @@ passport.use(
       );
 
       try {
-        
         const user = await prisma.user.findUnique({
           where: { email: profile._json.email },
         });
@@ -133,9 +126,9 @@ passport.deserializeUser(async function (email, callback) {
     if (user) {
       callback(null, user);
     } else {
-      console.log('User not found')
+      console.log("User not found");
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 });
