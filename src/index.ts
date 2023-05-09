@@ -24,9 +24,9 @@ app.use(
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
-    methods: 'GET,POST,PUT,DELETE',
-    credentials:true
+    origin: "https://aj-storefront-frontend.netlify.app",
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
   })
 );
 app.use(express.urlencoded({ extended: true }));
