@@ -11,8 +11,10 @@ facebookCustomerRouter.get(
 facebookCustomerRouter.get(
   "/facebook/callback",
   passport.authenticate("facebook", {
-    successRedirect: "https://aj-storefront-frontend.netlify.app",
+    successRedirect: "https://aj-storefront-frontend.netlify.app/homepage",
     failureRedirect: "/api/verify/fail",
+  }, (req, res) => {
+    res.json({message:'i am here now'})
   })
 );
 
