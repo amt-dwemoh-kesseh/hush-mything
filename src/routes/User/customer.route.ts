@@ -17,7 +17,7 @@ customerRouter.post(
   customerRegistrationValidation,
   customerSignIn
 );
-customerRouter.get("/verify/:id/:token",verifymyAccount)
+customerRouter.get("/verify",verifymyAccount)
 
 
 
