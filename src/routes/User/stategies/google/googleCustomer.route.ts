@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import passport from "passport";
+import token from "../../../../utils/genToken";
 
 export const googleCustomerRouter = express.Router();
 
@@ -18,4 +19,13 @@ googleCustomerRouter.get(
 
 googleCustomerRouter.get("/failpage", (req: Request, res: Response) => {
   res.send("Failed to authenticate");
+});
+googleCustomerRouter.get("/login/success", (req: Request, res: Response) => {
+  if (req.user) {
+    res.status(200).json({
+      success: true,
+      message: 'Successful Authentication',
+      user:req.user
+    })
+  }
 });
