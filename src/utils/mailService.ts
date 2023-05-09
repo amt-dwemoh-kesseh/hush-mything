@@ -32,7 +32,7 @@ export const resetPasswordMail = async (user, token) => {
             },</p> <p style="font-size: 18px; text-align: center">You recently requested for a password reset. If you were not the one, you can ignore this message. You can click on the link below to reset your StoreFront password...</p>.`;
         
         const subject = `Reset Your Storefront Account Password`;
-        const message = `${FRONTEND_BASE_URL}/resetp2/${user.id}/${token}`;
+        const message = `${FRONTEND_BASE_URL}/resetpw2/${user.id}/`;
         await Mailer(user, subject, message, heading);
 
     } catch (error) {
