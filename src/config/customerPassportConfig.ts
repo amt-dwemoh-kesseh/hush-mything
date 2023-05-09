@@ -49,14 +49,7 @@ passport.use(
               activated: true,
             },
           });
-          console.log(newUser);
-          if (newUser) {
-            passport.serializeUser(newUser, function (err, email) {
-              callback(err, newUser);
-            });
-          } else {
-            callback(null, user);
-          }
+          callback(null, newUser);
         } else {
           callback(null, user);
         }
@@ -97,13 +90,7 @@ passport.use(
             },
           });
 
-          if (newUser) {
-            passport.serializeUser(newUser, function (err, email) {
-              callback(err, newUser);
-            });
-          } else {
-            callback(null, user);
-          }
+          callback(null, newUser);
         } else {
           callback(null, user);
         }
