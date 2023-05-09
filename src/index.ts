@@ -2,7 +2,6 @@ import express, { Application, Request, Response } from "express";
 import dotenv from "dotenv";
 import expressSession from "express-session";
 import passport from "passport";
-import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 import "./config/customerPassportConfig";
 import "./config/merchantPassportConfig"
@@ -11,7 +10,7 @@ import { approuter } from "./routes/routesHandler/routes";
 dotenv.config();
 
 export const app: Application = express();
-const prisma = new PrismaClient();
+
 
 app.use(express.json());
 
@@ -23,10 +22,17 @@ app.use(
   })
 );
 
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: 'GET,POST,PUT,DELETE',
+    credentials:true
+  })
+);
+app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(cors({}));
-app.use(express.urlencoded({ extended: true }));
+
 
 app.use('/',approuter)
 
