@@ -21,7 +21,7 @@ export const merchantSignIn = async (
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({success:false, errors: errors.array() });
     }
     const user = await prisma.user.findUnique({
       where: {
@@ -29,7 +29,7 @@ export const merchantSignIn = async (
       },
     });
     if (user) {
-         res.status(401).json({
+         res.status(401).json({success:false,
            message: "Email already has an account, please Login",
          }); 
     } else {
@@ -57,7 +57,7 @@ export const merchantSignIn = async (
       },
       });
       sendActivationMail(merchant, token(merchant.id));
-      res.status(201).send({
+      res.status(201).json({success:true,
       message: `Activate your account with the link sent to ${merchant.email}`,
     });
       }
