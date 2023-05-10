@@ -10,13 +10,13 @@ import { approuter } from "./routes/routesHandler/routes";
 dotenv.config();
 
 export const app: Application = express();
-
+const { SESSION_SECRET } = process.env;
 
 app.use(express.json());
 
 app.use(
   expressSession({
-    secret: "thisismysecret",
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
   })
