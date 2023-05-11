@@ -38,7 +38,7 @@ export const verifymyAccount = async (
       },
     });
     if (verifiedUser) {
-      res.status(200).json({ success: true, message: "Succeffully Verified" });
+      res.status(200).json({ success: true, message: "Successfully Verified" });
     }
   } catch (error) {
     throw new Error("Error whilst verifying!");

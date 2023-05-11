@@ -1,0 +1,42 @@
+const salt = await bcrypt.genSalt(Number(SALT_VALUE));
+      const googlehashPassword = bcrypt.hashSync(profile._json.sub, salt);
+
+      try {
+        const user = await prisma.user.findUnique({
+          where: { email: profile._json.email },
+        });
+        if (!user) {
+          const newUser = await prisma.user.create({
+            data: {
+              email: profile._json.email,
+              first_name: profile._json.family_name,
+              last_name: profile._json.given_name,
+              role: roleType.customer,
+              password: googlehashPassword,
+              activated: true,
+            },
+          });
+          callback(null, newUser);
+        } else {
+          callback(null, user);
+        }
+      } catch (error) {
+        callback(error);
+      }
+
+
+
+
+      ///deserializeUser
+      try {
+    const user = await prisma.user.findFirst({
+      where: { email: email },
+    });
+    if (user) {
+      callback(null, user);
+    } else {
+      console.log("User not found");
+    }
+  } catch (error) {
+    console.log(error);
+  }
