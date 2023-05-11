@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "storefront",
   "main": "index.js",
-  "author": "Kesseh",
-  "license": "",
+  "repository": "https://github.com/AmaliTech-Training-Academy/storefront-backend.git",
+  "author": "Amali-Tech",
+  "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev --transpile-only --ignore-watch node_modules --respawn src/index.ts",
     "build": "tsc -p .",

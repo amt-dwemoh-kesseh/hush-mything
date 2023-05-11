@@ -1,26 +1,25 @@
-import { Mailer } from "../config/mailingConfig";
+import { mailer } from "../config/mailingConfig";
+import { ERROR_MESSAGE, OTHER_MESSAGE, SUCCESS_MESSAGE } from "../constants/message";
 
 const { FRONTEND_BASE_URL } = process.env;
 
+const { mailNotSent } = ERROR_MESSAGE;
+const { activateYourAccount, resetYourPassword } = OTHER_MESSAGE;
+
 export const sendActivationMail = async (user, token) => {
   try {
+    const { first_name, business_name } = user;
+    const recipientName = first_name || business_name;
 
-        const { first_name, business_name } = user
-        const recipientName = first_name || business_name
+    const heading = `<p style="font-size: 18px; text-align: left">Hi ${recipientName},</p> <p style="font-size: 18px; text-align: center">Activate your Storefront Account with the link below...</p>.`;
 
-        const heading = `<p style="font-size: 18px; text-align: left">Hi ${
-			recipientName
-            },</p> <p style="font-size: 18px; text-align: center">Activate your Storefront Account with the link below...</p>.`;
-        
-        const subject = `Activate Your Storefront Account`;
-        const message = `${FRONTEND_BASE_URL}/auth-success/${user.id}/${token}/`;
-        await Mailer(user, subject, message, heading)
-        
-    } catch (error) {
-        console.error('Error Sending Mail')
-    }
-
-}
+    const subject = activateYourAccount;
+    const message = `${FRONTEND_BASE_URL}/auth-success/${user.id}/${token}/`;
+    await mailer(user, subject, message, heading);
+  } catch (error) {
+    console.error(mailNotSent);
+  }
+};
 
 export const resetPasswordMail = async (user, token) => {
   try {
@@ -31,12 +30,11 @@ export const resetPasswordMail = async (user, token) => {
 			recipientName
             },</p> <p style="font-size: 18px; text-align: center">You recently requested for a password reset. If you were not the one, you can ignore this message. You can click on the link below to reset your StoreFront password...</p>.`;
         
-        const subject = `Reset Your Storefront Account Password`;
+        const subject = resetYourPassword;
         const message = `${FRONTEND_BASE_URL}/resetpw2/${user.id}/`;
-        await Mailer(user, subject, message, heading);
+        await mailer(user, subject, message, heading);
 
     } catch (error) {
-        throw new Error('Error sending password reset mail')
+        console.error(mailNotSent);
     }
 }
-

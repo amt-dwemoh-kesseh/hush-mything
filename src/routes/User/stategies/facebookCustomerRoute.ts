@@ -2,6 +2,8 @@ import express, { Request, Response } from "express";
 import passport from "passport";
 
 export const facebookCustomerRouter = express.Router();
+const { FRONTENT_BASE_URL } = process.env;
+
 
 facebookCustomerRouter.get(
   "/auth/facebook",
@@ -11,7 +13,7 @@ facebookCustomerRouter.get(
 facebookCustomerRouter.get(
   "/facebook/callback",
   passport.authenticate("facebook", {
-    successRedirect: "https://aj-storefront-frontend.netlify.app/homepage",
+    successRedirect: (`${FRONTENT_BASE_URL}/homepage`),
     failureRedirect: "/api/verify/fail",
   })
 );

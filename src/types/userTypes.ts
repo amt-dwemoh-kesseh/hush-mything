@@ -1,3 +1,5 @@
+import { ValidationError } from "express-validator";
+
 export interface UserRequestBody {
   id: string;
   first_name: string;
@@ -19,3 +21,8 @@ export enum businessType {
   fashion = "ecommerce",
   tech = "finance",
 }
+
+export interface ErrorWithStatusCode extends Error{
+  statusCode?: number;
+  [key: string | number]: any;
+};

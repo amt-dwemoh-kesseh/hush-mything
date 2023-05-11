@@ -8,10 +8,14 @@ import {
   Strategy as FacebookStrategy,
 } from "passport-facebook";
 import { Strategy as GoogleStrategy } from "passport-google-oauth2";
-import { roleType } from "../types/user.types";
+import { roleType } from "../types/userTypes";
 import * as bcrypt from "bcryptjs";
+import { ERROR_MESSAGE } from "../constants/message";
 
 const prisma = new PrismaClient();
+
+const { userNotFound } = ERROR_MESSAGE;
+
 const {
   FACEBOOK_APP_ID,
   FACEBOOK_APP_SECRET,
@@ -59,6 +63,7 @@ passport.use(
     }
   )
 );
+
 passport.use(
   new FacebookStrategy(
     {
@@ -113,7 +118,7 @@ passport.deserializeUser(async function (email, callback) {
     if (user) {
       callback(null, user);
     } else {
-      console.log("User not found");
+      console.log(userNotFound);
     }
   } catch (error) {
     console.log(error);

@@ -1,11 +1,11 @@
-import express,{Application} from 'express'
-import dotenv from 'dotenv'
+import express, { Application, Request, Response } from "express";
+import dotenv from "dotenv";
 import expressSession from "express-session";
-import passport from 'passport'
-import cors from 'cors'
-import "./config/customerPassportConfig";
-// import "./config/merchantPassportConfig"
-import { approuter } from "./routes/routesHandler/routes";
+import passport from "passport";
+import cors from "cors";
+import "./config/passportConfig";
+import { appRouter } from "./routes/routesHandler/routes";
+import { errorHandler } from "./utils/utils";
 
 dotenv.config();
 
@@ -22,17 +22,15 @@ app.use(
   })
 );
 
-app.use(cors());
-app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(cors({}));
+app.use(express.urlencoded({ extended: true }));
 
+app.use("/", appRouter);
 
-app.use('/',approuter)
-
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 
-app.listen(PORT, () => {
-  console.log(`Server is running now`)
-});
+app.listen(PORT);

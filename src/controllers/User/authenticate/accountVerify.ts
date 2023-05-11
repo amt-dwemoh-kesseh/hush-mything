@@ -1,22 +1,30 @@
 import express, { NextFunction, Response, Request } from "express";
 import { PrismaClient } from "@prisma/client";
+import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../../constants/message";
+import { setError, setSuccess } from "../../../utils/utils";
 
 const prisma = new PrismaClient();
+const { invalidVerifyLink, emailVerifyError } = ERROR_MESSAGE;
+const { verifySuccess } = SUCCESS_MESSAGE;
 
-export const verifymyAccount = async (
+export const verifyMyAccount = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+
   const { id, token } = req.body;
+
   try {
     const user = await prisma.user.findUnique({
       where: {
         id: id,
       },
     });
+
     if (!user) {
-      return res.status(401).json({ message: "Invalid link" });
+      setError(401, invalidVerifyLink, res);
+      return;
     }
 
     const userToken = await prisma.token.findFirst({
@@ -25,8 +33,10 @@ export const verifymyAccount = async (
         token: token,
       },
     });
+
     if (!userToken) {
-      return res.status(401).json({ message: "Invalid link" });
+      setError(401, invalidVerifyLink, res);
+      return;
     }
 
     const verifiedUser = await prisma.user.update({
@@ -37,10 +47,14 @@ export const verifymyAccount = async (
         activated: true,
       },
     });
+    
     if (verifiedUser) {
-      res.status(200).json({ success: true, message: "Succeffully Verified" });
+      setSuccess(res, 200, verifySuccess)
+      return;
     }
   } catch (error) {
-    throw new Error("Error whilst verifying!");
+    const errorCode = error.statusCode | 500
+    setError(errorCode, emailVerifyError, res);
+    return;
   }
 };

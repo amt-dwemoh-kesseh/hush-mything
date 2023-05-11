@@ -1,18 +1,13 @@
 import { NextFunction, Response, Request } from "express";
 import { PrismaClient } from "@prisma/client";
-import jwt from "jsonwebtoken";
 import bcrypt from 'bcryptjs';
+import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../../constants/message";
+import { setError, setSuccess } from "../../../utils/utils";
 
-// initialize prisma client
 const prisma = new PrismaClient()
+const { userIdNotFound, passwordResetError } = ERROR_MESSAGE;
+const { passwordUpdateSuccess } = SUCCESS_MESSAGE;
 
-/**
- * Checks that user and user token exist and have correct credentials with id and token
- * @param req Request
- * @param res Response
- * @param next Next 
- * @returns 
- */
 export const verifyMyPasswordReset = async (req: Request, res: Response, next: NextFunction) => {
     
     
@@ -25,13 +20,10 @@ export const verifyMyPasswordReset = async (req: Request, res: Response, next: N
                id: id
             }
         })
-
         
         if (!user) {
-            return res.status(401).json({
-                success: false,
-                message: "No user with the ID exist",
-            })
+            setError(401, userIdNotFound, res);
+            return;
         }
 
         if ( user) {
@@ -47,15 +39,14 @@ export const verifyMyPasswordReset = async (req: Request, res: Response, next: N
                 },
             })
 
-            res.status(200).json({
-                success: true,
-                message: "Password updated Successfully. You can Log in now"
-            })
+            setSuccess(res, 200, passwordUpdateSuccess)
+            return;
 
         }
 
-
     } catch (error) {        
-        console.log(error);
+        const errorCode = error.statusCode | 500
+        setError(errorCode, passwordResetError, res);
+        return;
     }
 }

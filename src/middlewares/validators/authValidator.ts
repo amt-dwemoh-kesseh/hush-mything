@@ -1,14 +1,17 @@
-import { validateBusinessName, validateConfirmPassword, validateEmail, validateFirstName, validateLastName, validatePassword } from "../../config/validatorConfig";
-
-  
-export const loginValidation = [
- validateEmail,
+import {
+  validateBusinessName,
+  validateConfirmPassword,
+  validateEmail,
+  validateFirstName,
+  validateLastName,
   validatePassword,
-];
+} from "../../config/validatorConfig";
+
+export const loginValidation = [validateEmail, validatePassword];
 
 export const resetPasswordValidation = [
   validatePassword,
-  validateConfirmPassword
+  validateConfirmPassword,
 ];
 export const customerRegistrationValidation = [
   validateEmail,

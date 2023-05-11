@@ -14,6 +14,7 @@ export const validatePassword = body("password")
     minNumbers: 1,
     minSymbols: 1,
   })
+  .withMessage("Password must have minimum of 8 characters with one or more uppercase, lowercase, symbol, and number")
   .isLength({ max: 100 })
   .withMessage(
     "Password must have max character of 100 & min character of 8.Password must have at least 1 : UpperCase, Lowercase, Number, Symbol"
@@ -39,7 +40,7 @@ export const validateEmail = body("email")
   .isEmail()
   .withMessage("Enter a valid email");
 
-export const validateFirstName = body("first_name")
+  export const validateFirstName = body("first_name")
   .exists()
   .trim()
   .escape()
@@ -54,12 +55,11 @@ export const validateLastName = body("last_name")
   .trim()
   .escape()
   .custom((value) => /^[a-zA-Z]+$/.test(value))
-  .isString()
-  .withMessage("Enter last name")
-  .bail()
+  .withMessage("Last name must contain only letters")
   .notEmpty()
-  .withMessage("Email field cannot be empty")
+  .withMessage("Last name field cannot be empty")
   .isLength({ max: 50 });
+
 
 export const validateBusinessName = body("business_name")
   .notEmpty()

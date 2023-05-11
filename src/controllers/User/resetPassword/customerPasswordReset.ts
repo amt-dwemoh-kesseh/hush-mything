@@ -1,11 +1,15 @@
 import express, { NextFunction, Response, Request } from "express";
 import { PrismaClient } from "@prisma/client";
-import { UserRequestBody } from "../../../types/user.types";
+import { UserRequestBody } from "../../../types/userTypes";
 import { validationResult } from "express-validator";
 import token from "../../../utils/genToken";
 import { resetPasswordMail } from "../../../utils/mailService";
+import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../../constants/message";
+import { setError, setSuccess } from "../../../utils/utils";
 
 const prisma = new PrismaClient();
+const { emailNotFound, unverifiedAccount, passwordResetError } = ERROR_MESSAGE;
+const { passwordResetLinkSent } = SUCCESS_MESSAGE;
 
 export const sendResetPasswordMail = async (
   req: Request<{ merchant: Partial<UserRequestBody> }>,
@@ -13,13 +17,14 @@ export const sendResetPasswordMail = async (
   next: NextFunction
 ) => {
   try {
-    // checking email validation errors
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ success: false, errors: errors.array() });
-    }
 
     const { email } = req.body;
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      setError(400, errors.array()[0].msg, res);
+      return;
+    }
 
     const customerExist = await prisma.user.findUnique({
       where: {
@@ -28,10 +33,8 @@ export const sendResetPasswordMail = async (
     });
 
     if (!customerExist) {
-      res.status(501).json({
-        success: false,
-        message: "Email not registered, SignUp for an account",
-      });
+      setError(401, emailNotFound, res);
+      return;
     }
 
     const customerActivated = await prisma.user.findFirst({
@@ -42,19 +45,18 @@ export const sendResetPasswordMail = async (
     });
 
     if (!customerActivated) {
-      return res.status(501).json({
-        success: false,
-        message: "Account not verified! Verification link has been sent!",
-      });
+      setError(401, unverifiedAccount, res);
+      return;
+
     } else {
       resetPasswordMail(customerExist, token(customerExist.id));
-      res.json({
-        success: true,
-        message: `Password reset link sent to ${customerExist.email}`,
-      });
+
+      setSuccess(res, 200, passwordResetLinkSent + customerExist.email)
+      return;
     }
   } catch (error) {
-    const message = "Error While reseting password";
-    console.error(message);
+    const errorCode = error.statusCode | 500
+    setError(errorCode, passwordResetError, res);
+    return;
   }
 };

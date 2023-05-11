@@ -1,34 +1,44 @@
 import express, { NextFunction, Response, Request } from "express";
 import { PrismaClient } from "@prisma/client";
-import { UserRequestBody, roleType } from "../../../types/user.types";
+import { UserRequestBody, roleType } from "../../../types/userTypes";
 import { validationResult } from "express-validator";
 import token from "../../../utils/genToken";
 import * as bcrypt from "bcryptjs";
 import { sendActivationMail } from "../../../utils/mailService";
+import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../../constants/message";
+import { setError, setSuccess } from "../../../utils/utils";
 
 const prisma = new PrismaClient();
-const { SALT_VALUE} = process.env
+const { SALT_VALUE } = process.env;
 
-export const customerSignIn = async (
+const { userAlreadyExist, createCustomerError } = ERROR_MESSAGE;
+const { activateLinkSent } = SUCCESS_MESSAGE;
+
+export const customerSignUp = async (
   req: Request<{ customer: Partial<UserRequestBody> }>,
   res: Response,
   next: NextFunction
 ) => {
-  const {
-    email,
-    first_name,
-    last_name,
-    password,
-    activated,
+
+  const { 
+    email, 
+    first_name, 
+    last_name, 
+    password, 
+    activated 
   }: UserRequestBody = req.body;
+
   const salt = bcrypt.genSaltSync(Number(SALT_VALUE));
   const hashedPassword = bcrypt.hashSync(password, salt);
 
   try {
     const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
-      return res.status(400).json({success:false, errors: errors.array() });
+      setError(401, errors.array()[0].msg, res);
+      return;
     }
+
     const user = await prisma.user.findUnique({
       where: {
         email: email,
@@ -36,9 +46,8 @@ export const customerSignIn = async (
     });
 
     if (user) {
-      return res.status(401).json({
-        message: "Email already has an account, please Login",
-      });
+      setError(401, userAlreadyExist, res);
+      return;
     }
 
     const customer = await prisma.user.create({
@@ -61,14 +70,12 @@ export const customerSignIn = async (
 
     sendActivationMail(customer, token(customer.id));
 
-    res.status(201).json({success:true,
-      message: `You should receive an email shortly. Activate your account with the link sent to ${customer.email}`,
-        });
-    next();
+    setSuccess(res, 200, activateLinkSent + customer.email);
+    return;
+      
   } catch (err) {
-    console.error(err);
-    res
-      .status(501)
-      .json({ message: "An error occured whilst creating cutomer profile" });
+    const errorCode = err.statusCode | 500
+    setError(errorCode, createCustomerError, res);
+    return;    
   }
 };
